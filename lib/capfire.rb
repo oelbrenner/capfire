@@ -1,23 +1,26 @@
 # Gem for applications to automatically post to Campfire after an deploy.
 
 require 'broach'
-require 'etc'
 
 class Capfire
   # To see how it actually works take a gander at the generator
   # or in the capistrano.rb
   class << self
+    def config_file_path
+      "config/capfire.yml"
+    end
+
     def config_file_exists?
-      File.exists?(File.join(ENV['HOME'],'.campfire'))
+      File.exists?( config_file_path )
     end
 
     def valid_config?
       config = self.config
-      config["message"] && config["room"] && config ["token"] && config["account"]
+      config["pre_message"] && config["post_message"] && config["room"] && config ["token"] && config["account"]
     end
 
     def config
-      YAML::load(File.open(File.join(ENV['HOME'],'.campfire')))["campfire"]
+      YAML::load( File.open( config_file_path ) )
     end
 
     # Campfire room
@@ -35,22 +38,9 @@ class Capfire
       self.config["token"]
     end
 
-    # `brew install cowsay && cowsay "capfire"`
-    #  _________
-    #< capfire >
-    # ---------
-    #        \   ^__^
-    #         \  (oo)\_______
-    #            (__)\       )\/\
-    #                ||----w |
-    #                ||     ||
-    def cowsay?
-      config["cowsay"] && self.bin_installed?("cowsay")
-    end
-
     # Who is deploying
     def deployer
-      Etc.getlogin
+      ENV["USER"]
     end
 
     # Link to github's excellent Compare View
@@ -62,7 +52,7 @@ class Capfire
     end
 
     def default_idiot_message
-      "LATFH: #deployer# wanted to deploy #application#, but forgot to push first."
+      "lol. #deployer# wanted to deploy #application#, but forgot to push first."
     end
 
     # Message to post on deploying without pushing
@@ -75,8 +65,8 @@ class Capfire
     end
 
     # Message to post to campfire on deploy
-    def deploy_message(args,compare_url, application)
-      message = self.config["message"]
+    def pre_deploy_message(args,compare_url, application)
+      message = self.config["pre_message"]
       message.gsub!(/#deployer#/, deployer)
       message.gsub!(/#application#/, application)
       message.gsub!(/#args#/, args)
@@ -84,11 +74,14 @@ class Capfire
       message
     end
 
-    # Quick and irty way to check for installed bins
-    # Ideally this should also check if it's in the users
-    # path etc. Skipping for now.
-    def bin_installed?(bin_name)
-      !`which #{bin_name}`.empty?
+    # Message to post to campfire on deploy
+    def post_deploy_message(args,compare_url, application)
+      message = self.config["post_message"]
+      message.gsub!(/#deployer#/, deployer)
+      message.gsub!(/#application#/, application)
+      message.gsub!(/#args#/, args)
+      message.gsub!(/#compare_url#/, compare_url)
+      message
     end
 
     # Initializes a broach campfire room
