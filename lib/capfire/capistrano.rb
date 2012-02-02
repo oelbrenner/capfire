@@ -36,7 +36,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         local_version = `git rev-parse HEAD`[0,7]
 
         COMPARE_URL = Capfire.github_compare_url source_repo_url, deployed_version, local_version
-        message = Capfire.deploy_message(ARGV.join(' '), COMPARE_URL, application)
+        message = Capfire.pre_deploy_message(ARGV.join(' '), COMPARE_URL, application)
 
         if dry_run
           logger.info "Capfire would have posted:\n#{message}"
@@ -54,7 +54,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Announce the deploy finished in Campfire"
     task :post_announce do
       begin
-        message = Capfire.deploy_message(ARGV.join(' '), COMPARE_URL, application)
+        message = Capfire.post_deploy_message(ARGV.join(' '), COMPARE_URL, application)
 
         if dry_run
           logger.info "Capfire would have posted:\n#{message}"

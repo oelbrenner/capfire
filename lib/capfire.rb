@@ -84,8 +84,9 @@ class Capfire
       message
     end
 
-    def sub!( text, args, compare_url, application )
+    def subs( text, args, compare_url, application )
       # Basic emoji
+      text = text.clone
       text.gsub!( /#sun#/, "\u{2600}" )
       text.gsub!( /#cloud#/, "\u{2600}" )
       text.gsub!( /#turd#/, "\u{1F4A9}" )
@@ -93,6 +94,7 @@ class Capfire
       text.gsub!( /#application#/, application ) if application
       text.gsub!( /#args#/, args ) if args
       text.gsub!( /#compare_url#/, compare_url ) if compare_url
+      text
     end
 
     # Initializes a broach campfire room
