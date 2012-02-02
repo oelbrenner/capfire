@@ -46,42 +46,53 @@ class Capfire
     # Link to github's excellent Compare View
     def github_compare_url(repo_url, first_commit, last_commit)
       repo_url.gsub!(/git@/, 'http://')
-      repo_url.gsub!(/\.com:/,'.com/')
+      repo_url.gsub!(/github\.com:/,'github.com/')
       repo_url.gsub!(/\.git/, '')
       "#{repo_url}/compare/#{first_commit}...#{last_commit}"
+    end
+
+    def default_pre_message
+      "#cloud# #deployer# started a #application# deploy with `cap #args#` (#compare_url#)"
+    end
+
+    def default_post_message
+      "#sun# #deployer# finished the #application# deploy (#compare_url#)"
     end
 
     def default_idiot_message
       "lol. #deployer# wanted to deploy #application#, but forgot to push first."
     end
 
+    # Message to post to campfire on deploy
+    def pre_deploy_message(args, compare_url, application)
+      message = self.config["pre_message"] || default_pre_message
+      message = subs( message, args, compare_url, application )
+      message
+    end
+
+    # Message to post to campfire on deploy
+    def post_deploy_message(args, compare_url, application)
+      message = self.config["post_message"] || default_post_message
+      message = subs( message, args, compare_url, application )
+      message
+    end
+
     # Message to post on deploying without pushing
     def idiot_message(application)
-      message = self.config["idiot_message"]
-      message = default_idiot_message unless message
-      message.gsub!(/#deployer#/, self.deployer)
-      message.gsub!(/#application#/, application)
+      message = self.config["idiot_message"] || default_idiot_message
+      message = subs( message, false, false, application )
       message
     end
 
-    # Message to post to campfire on deploy
-    def pre_deploy_message(args,compare_url, application)
-      message = self.config["pre_message"]
-      message.gsub!(/#deployer#/, deployer)
-      message.gsub!(/#application#/, application)
-      message.gsub!(/#args#/, args)
-      message.gsub!(/#compare_url#/, compare_url)
-      message
-    end
-
-    # Message to post to campfire on deploy
-    def post_deploy_message(args,compare_url, application)
-      message = self.config["post_message"]
-      message.gsub!(/#deployer#/, deployer)
-      message.gsub!(/#application#/, application)
-      message.gsub!(/#args#/, args)
-      message.gsub!(/#compare_url#/, compare_url)
-      message
+    def sub!( text, args, compare_url, application )
+      # Basic emoji
+      text.gsub!( /#sun#/, "\u{2600}" )
+      text.gsub!( /#cloud#/, "\u{2600}" )
+      text.gsub!( /#turd#/, "\u{1F4A9}" )
+      text.gsub!( /#deployer#/, deployer )
+      text.gsub!( /#application#/, application ) if application
+      text.gsub!( /#args#/, args ) if args
+      text.gsub!( /#compare_url#/, compare_url ) if compare_url
     end
 
     # Initializes a broach campfire room

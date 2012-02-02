@@ -35,7 +35,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         deployed_version = previous_revision[0,7] rescue "000000"
         local_version = `git rev-parse HEAD`[0,7]
 
-        COMPARE_URL = Capfire.github_COMPARE_URL source_repo_url, deployed_version, local_version
+        COMPARE_URL = Capfire.github_compare_url source_repo_url, deployed_version, local_version
         message = Capfire.deploy_message(ARGV.join(' '), COMPARE_URL, application)
 
         if dry_run
