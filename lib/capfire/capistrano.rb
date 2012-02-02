@@ -31,7 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Pre-announce the deploy in Campfire"
     task :pre_announce do
       begin
-        source_repo_url = repository
+        source_repo_url = repository.clone
         deployed_version = previous_revision[0,7] rescue "000000"
         local_version = `git rev-parse HEAD`[0,7]
 
