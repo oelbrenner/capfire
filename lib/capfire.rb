@@ -52,11 +52,11 @@ class Capfire
     end
 
     def default_pre_message
-      "#cloud# #deployer# started a #application# deploy with `cap #args#` (#compare_url#)"
+      "#sparkle# #deployer# started a #application# deploy with `cap #args#` (#compare_url#)"
     end
 
     def default_post_message
-      "#sun# #deployer# finished the #application# deploy (#compare_url#)"
+      "#star# #deployer# finished the #application# deploy (#compare_url#)"
     end
 
     def default_idiot_message
@@ -87,8 +87,8 @@ class Capfire
     def subs( text, args, compare_url, application )
       # Basic emoji
       text = text.clone
-      text.gsub!( /#sun#/, "\u{2600}" )
-      text.gsub!( /#cloud#/, "\u{2600}" )
+      text.gsub!( /#sparkle#/, "\u{2728}" )
+      text.gsub!( /#star#/, "\u{1F31F}" )
       text.gsub!( /#turd#/, "\u{1F4A9}" )
       text.gsub!( /#deployer#/, deployer )
       text.gsub!( /#application#/, application ) if application
