@@ -9,7 +9,6 @@ Add `config/capfire.yml` with something like:
     account: subdomain
     pre_message: "#deployer# started a #application# deploy with `cap #args# (#compare_url#)"
     post_message: "#deployer# finished the #application# deploy (#compare_url#)"
-    idiot_message: "#deployer# tried to deploy without pushing first. lol."
 
 And add `require "capfire/capistrano"` to your Capfile
 

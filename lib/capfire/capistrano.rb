@@ -16,18 +16,6 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   namespace :capfire do
 
-    desc "Check if local version was pushed to github"
-    task :check_for_push do
-      deployed_version = current_revision[0,7] rescue "0000000"
-      local_version = `git rev-parse HEAD`[0,7]
-
-      if deployed_version == local_version
-        Capfire.speak(Capfire.idiot_message(application)) unless dry_run
-        logger.important "\nDidn't you forget something? A hint: `git push`."
-        exit
-      end
-    end
-
     desc "Pre-announce the deploy in Campfire"
     task :pre_announce do
       begin

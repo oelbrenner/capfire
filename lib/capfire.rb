@@ -59,10 +59,6 @@ class Capfire
       "#star# #deployer# finished the #application# deploy (#compare_url#)"
     end
 
-    def default_idiot_message
-      "lol. #deployer# wanted to deploy #application#, but forgot to push first."
-    end
-
     # Message to post to campfire on deploy
     def pre_deploy_message(args, compare_url, application)
       message = self.config["pre_message"] || default_pre_message
@@ -74,13 +70,6 @@ class Capfire
     def post_deploy_message(args, compare_url, application)
       message = self.config["post_message"] || default_post_message
       message = subs( message, args, compare_url, application )
-      message
-    end
-
-    # Message to post on deploying without pushing
-    def idiot_message(application)
-      message = self.config["idiot_message"] || default_idiot_message
-      message = subs( message, false, false, application )
       message
     end
 
