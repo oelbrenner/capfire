@@ -7,7 +7,6 @@ require 'capfire'
 
 Capistrano::Configuration.instance(:must_exist).load do
   if Capfire.valid_config?
-    before "deploy", "capfire:check_for_push"
     before "deploy", "capfire:pre_announce"
     after "deploy", "capfire:post_announce"
   else
