@@ -59,15 +59,23 @@ class Capfire
       "#star# #deployer# finished the #application# deploy (#compare_url#)"
     end
 
-    # Message to post to campfire on deploy
+    # Sound to play on campfire before deploy
     def pre_deploy_sound
       sound = self.config["pre_sound"]
       self.speak(sound, :type => :sound) if sound
     end
-    
+
+    # Sound to play on campfire after deploy
     def post_deploy_sound
       sound = self.config["post_sound"]
       self.speak(sound, :type => :sound) if sound
+    end
+
+    # Message to post to campfire on deploy
+    def pre_deploy_message(args, compare_url, application) 
+      message = self.config["pre_message"] || default_pre_message
+      message = subs( message, args, compare_url, application )
+      message
     end
 
     # Message to post to campfire on deploy
