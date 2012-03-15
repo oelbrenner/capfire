@@ -88,7 +88,7 @@ class Capfire
 
     # Initializes a broach campfire room
     def broach
-      @broach ||= Broach.tap do |broach|
+      Broach.tap do |broach|
         broach.settings = {
         'account' => self.account,
         'token' => self.token,
