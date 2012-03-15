@@ -31,6 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do
             logger.info "Capfire would have posted:\n#{message}"
           else
             Capfire.speak message
+            Capfire.pre_deploy_sound
             logger.info "Posting to Campfire"
           end
         end
@@ -51,6 +52,7 @@ Capistrano::Configuration.instance(:must_exist).load do
             logger.info "Capfire would have posted:\n#{message}"
           else
             Capfire.speak message
+            Capfire.post_deploy_sound
             logger.info "Posting to Campfire"
           end
         end

@@ -60,10 +60,14 @@ class Capfire
     end
 
     # Message to post to campfire on deploy
-    def pre_deploy_message(args, compare_url, application)
-      message = self.config["pre_message"] || default_pre_message
-      message = subs( message, args, compare_url, application )
-      message
+    def pre_deploy_sound
+      sound = self.config["pre_sound"]
+      self.speak(sound, :type => :sound) if sound
+    end
+    
+    def post_deploy_sound
+      sound = self.config["post_sound"]
+      self.speak(sound, :type => :sound) if sound
     end
 
     # Message to post to campfire on deploy
@@ -96,14 +100,14 @@ class Capfire
         }
       end
     end
-    
+
     def valid_credentials?
       !!self.broach.me
     end
 
     # Posts to campfire
-    def speak(message)
-      self.broach.speak(self.room, message) if valid_credentials?
+    def speak(message, options={})
+      self.broach.speak(self.room, message, options) if valid_credentials?
     end
   end
 end
