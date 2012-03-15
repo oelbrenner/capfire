@@ -88,7 +88,7 @@ class Capfire
 
     # Initializes a broach campfire room
     def broach
-      Broach.tap do |broach|
+      @broach ||= Broach.tap do |broach|
         broach.settings = {
         'account' => self.account,
         'token' => self.token,
@@ -99,7 +99,7 @@ class Capfire
 
     # Posts to campfire
     def speak(message)
-      self.broach.speak(self.room, message) if Broach.me
+      self.broach.speak(self.room, message) if self.broach.me
     end
   end
 end

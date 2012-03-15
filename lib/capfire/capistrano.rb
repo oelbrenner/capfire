@@ -19,10 +19,16 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :pre_announce do
       begin
         source_repo_url = repository.clone
+        logger.info 'Finding Deployed Version'
         deployed_version = previous_revision[0,7] rescue "000000"
+        logger.info "* Done (#{deployed_version})"
+        logger.info 'Finding Local Version'
         local_version = `git rev-parse HEAD`[0,7]
-
+        logger.info "* Done (#{local_version})"
+        
+        logger.info 'Building Github Compare URL'
         COMPARE_URL = Capfire.github_compare_url source_repo_url, deployed_version, local_version
+        logger.info 'Building Message'
         message = Capfire.pre_deploy_message(ARGV.join(' '), COMPARE_URL, application)
 
         if dry_run
