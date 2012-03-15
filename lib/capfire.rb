@@ -96,10 +96,14 @@ class Capfire
         }
       end
     end
+    
+    def valid_credentials?
+      !!self.broach.me
+    end
 
     # Posts to campfire
     def speak(message)
-      self.broach.speak(self.room, message) if self.broach.me
+      self.broach.speak(self.room, message) if valid_credentials?
     end
   end
 end
