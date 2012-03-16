@@ -28,10 +28,14 @@ Capistrano::Configuration.instance(:must_exist).load do
           message = Capfire.pre_deploy_message(ARGV.join(' '), COMPARE_URL, application)
 
           if dry_run
+            logger.info "Stage is:\n#{stage}"
             logger.info "Capfire would have posted:\n#{message}"
           else
             Capfire.speak message
-            Capfire.pre_deploy_sound
+            if stage.to_s == 'production'
+              logger.info "Production mode.. playing sound"
+              Capfire.pre_deploy_sound
+            end
             logger.info "Posting to Campfire"
           end
         end
